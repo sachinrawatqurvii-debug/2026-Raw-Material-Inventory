@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import Papa from "papaparse";
+import React, { useState } from 'react';
+import Papa from 'papaparse';
 
 const StyleUploader = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState('');
   const [progress, setProgress] = useState(0);
 
-  const API_BASE_URL = "http://localhost:5000/api/v1";
+  // const API_BASE_URL = 'http://localhost:5000/api/v1';
+  const API_BASE_URL = 'https://raw-material-backend.onrender.com/api/v1';
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -24,13 +25,13 @@ const StyleUploader = () => {
 
   const fixValue = (v) => {
     if (v === undefined || v === null) return null;
-    if (v === "") return null;
+    if (v === '') return null;
     return v;
   };
 
   const handleUpload = () => {
     if (!file) {
-      alert("Please select a CSV file first!");
+      alert('Please select a CSV file first!');
       return;
     }
 
@@ -65,7 +66,7 @@ const StyleUploader = () => {
 
               if (fno || fname || fimg) {
                 fabrics.push({
-                  fabric_no: Number(fno) || null,   // number type
+                  fabric_no: Number(fno) || null, // number type
                   fabric_name: fname,
                   fabric_image: fimg,
                 });
@@ -79,9 +80,9 @@ const StyleUploader = () => {
             }
 
             return {
-              styleNumber: Number(fixValue(row["Style Number"])) || null,  // number type
-              patternNumber: fixValue(row["Pattern Number"]),
-              styleImage: fixValue(row["Style Image"]),
+              styleNumber: Number(fixValue(row['Style Number'])) || null, // number type
+              patternNumber: fixValue(row['Pattern Number']),
+              styleImage: fixValue(row['Style Image']),
               fabrics,
               accessories,
             };
@@ -89,9 +90,9 @@ const StyleUploader = () => {
 
           // 🔥 FINAL FIX → proper body
           const response = await fetch(`${API_BASE_URL}/style-details`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               styles: formattedData,
@@ -99,14 +100,14 @@ const StyleUploader = () => {
           });
 
           const resData = await response.json();
+          console.log('UPLOADED DATA', resData);
 
           if (!response.ok) {
-            throw new Error(resData?.message || "Upload failed");
+            throw new Error(resData?.message || 'Upload failed');
           }
 
           setResult(resData.data);
           setError(null);
-
         } catch (err) {
           setError(err.message);
           setResult(null);
@@ -118,22 +119,21 @@ const StyleUploader = () => {
 
       error: (error) => {
         clearInterval(progressInterval);
-        setError("Error parsing CSV file: " + error.message);
+        setError('Error parsing CSV file: ' + error.message);
         setUploading(false);
         setProgress(0);
       },
     });
   };
 
-
   const handleCancel = () => {
     setFile(null);
-    setFileName("");
+    setFileName('');
     setProgress(0);
     setUploading(false);
     setError(null);
     setResult(null);
-    document.getElementById("style-file-input").value = "";
+    document.getElementById('style-file-input').value = '';
   };
 
   return (
@@ -141,16 +141,31 @@ const StyleUploader = () => {
       {/* Header Section */}
       <div className="text-center mb-8">
         <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner">
-          <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+          <svg
+            className="w-10 h-10 text-purple-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+            />
           </svg>
         </div>
         <h2 className="text-3xl font-bold text-gray-800 mb-2">Style Data Upload</h2>
-        <p className="text-gray-600 text-lg">Upload CSV file containing style details, fabrics, and accessories</p>
+        <p className="text-gray-600 text-lg">
+          Upload CSV file containing style details, fabrics, and accessories
+        </p>
         <div>
           <a
             className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-purple-600 hover:to-blue-600 top-2 relative transition-all duration-200"
-            href="/style_upload_sample.csv">Download Sample</a>
+            href="/style_upload_sample.csv"
+          >
+            Download Sample
+          </a>
         </div>
       </div>
 
@@ -173,13 +188,23 @@ const StyleUploader = () => {
               <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-300 hover:border-purple-400 transition-colors duration-200">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <svg
+                      className="w-5 h-5 text-purple-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
                     </svg>
                   </div>
                   <div>
                     <p className="font-medium text-gray-800 truncate max-w-xs">
-                      {fileName || "No file selected"}
+                      {fileName || 'No file selected'}
                     </p>
                     <p className="text-sm text-gray-500">Click to browse your files</p>
                   </div>
@@ -197,7 +222,12 @@ const StyleUploader = () => {
                 title="Remove file"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             )}
@@ -235,7 +265,7 @@ const StyleUploader = () => {
               <span>Processing Style Data...</span>
             </div>
           ) : (
-            "Upload Style Data"
+            'Upload Style Data'
           )}
         </button>
 
@@ -245,7 +275,11 @@ const StyleUploader = () => {
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <div className="flex-1">
@@ -275,7 +309,11 @@ const StyleUploader = () => {
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <div>
@@ -295,15 +333,22 @@ const StyleUploader = () => {
         {/* Help Text */}
         <div className="text-center pt-4 border-t border-gray-100">
           <p className="text-sm text-gray-500">
-            Expected columns: Style Number, Pattern Number, Style Image, Fabric 1-3, Fabric 1-3 Name, Fabric 1-3 Image, Accessory 1-3
+            Expected columns: Style Number, Pattern Number, Style Image, Fabric 1-3, Fabric 1-3
+            Name, Fabric 1-3 Image, Accessory 1-3
           </p>
         </div>
       </div>
 
       <style jsx>{`
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .animate-fade-in {
           animation: fade-in 0.4s ease-out;

@@ -24,7 +24,8 @@ import {
   FaBell,
   FaBook,
   FaChevronDown,
-  FaChevronRight
+  FaChevronRight,
+  FaList,
 } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -32,7 +33,7 @@ import { toast } from 'react-toastify';
 const Sidebar = ({ isAuthenticated, user, setUser }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const BASE_URL = "https://raw-material-backend.onrender.com"
+  const BASE_URL = 'https://raw-material-backend.onrender.com';
 
   // State to track which categories are expanded
   const [expandedCategories, setExpandedCategories] = useState({});
@@ -40,16 +41,32 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
   // Initialize all categories as expanded on first render
   useEffect(() => {
     const initialExpandedState = {};
-    if (user?.role === "admin") {
-      ['Dashboard', 'Management', 'Relations', 'Transactions', 'Bulk Operations', 'Monitoring', 'Resources'].forEach(category => {
+    if (user?.role === 'admin') {
+      [
+        'Dashboard',
+        'Management',
+        'Relations',
+        'Transactions',
+        'Bulk Operations',
+        'Monitoring',
+        'Resources',
+      ].forEach((category) => {
         initialExpandedState[category] = true;
       });
-    } else if (user?.role === "super-admin") {
-      ['Dashboard', 'Management', 'Relations', 'Transactions', 'Bulk Operations', 'Monitoring', 'Resources'].forEach(category => {
+    } else if (user?.role === 'super-admin') {
+      [
+        'Dashboard',
+        'Management',
+        'Relations',
+        'Transactions',
+        'Bulk Operations',
+        'Monitoring',
+        'Resources',
+      ].forEach((category) => {
         initialExpandedState[category] = true;
       });
     } else {
-      ['Dashboard', 'Management', 'Relations', 'Monitoring', 'Resources'].forEach(category => {
+      ['Dashboard', 'Management', 'Relations', 'Monitoring', 'Resources'].forEach((category) => {
         initialExpandedState[category] = true;
       });
     }
@@ -63,57 +80,195 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
     { name: 'Store1', icon: <FaWarehouse />, path: '/', category: 'Dashboard' },
     { name: 'Store2', icon: <FaWarehouse />, path: '/stock2', category: 'Dashboard' },
     { name: 'Accessory Stock', icon: <FaTags />, path: '/accessory-stock', category: 'Dashboard' },
-    { name: 'Style Management', icon: <FaLayerGroup />, path: '/style-number', category: 'Management' },
+    {
+      name: 'Style Management',
+      icon: <FaLayerGroup />,
+      path: '/style-number',
+      category: 'Management',
+    },
     { name: 'Fabric Relations', icon: <FaLink />, path: '/meter-and-kg', category: 'Relations' },
     { name: 'Low Stock Alert', icon: <FaBell />, path: '/low-stock', category: 'Monitoring' },
     // { name: 'Documentation', icon: <FaBook />, path: 'https://github.com/sachin-dev-at-qurvii/docs/blob/main/doc.md', category: 'Resources', external: true },
-    { name: 'Documentation', icon: <FaBook />, path: '/docs', category: 'Resources', external: true },
+    {
+      name: 'Documentation',
+      icon: <FaBook />,
+      path: '/docs',
+      category: 'Resources',
+      external: true,
+    },
   ];
 
   const adminLinks = [
     { name: 'Store1', icon: <FaWarehouse />, path: '/', category: 'Dashboard' },
     { name: 'Store2', icon: <FaWarehouse />, path: '/stock2', category: 'Dashboard' },
     { name: 'Accessory Stock', icon: <FaTags />, path: '/accessory-stock', category: 'Dashboard' },
-    { name: 'Latest Purchase', icon: <FaHistory />, path: '/latest-purchase', category: 'Dashboard' },
-    { name: 'Fabric Averages', icon: <FaCalculator />, path: '/fabric-average', category: 'Dashboard' },
-    { name: 'Style Management', icon: <FaLayerGroup />, path: '/style-number', category: 'Management' },
+    {
+      name: 'Latest Purchase',
+      icon: <FaHistory />,
+      path: '/latest-purchase',
+      category: 'Dashboard',
+    },
+    {
+      name: 'Fabric Averages',
+      icon: <FaCalculator />,
+      path: '/fabric-average',
+      category: 'Dashboard',
+    },
+    {
+      name: 'Style Management',
+      icon: <FaLayerGroup />,
+      path: '/style-number',
+      category: 'Management',
+    },
     { name: 'Fabric Relations', icon: <FaLink />, path: '/meter-and-kg', category: 'Relations' },
-    { name: 'Add/Ship Fabric', icon: <FaShippingFast />, path: '/add-ship', category: 'Transactions' },
-    { name: 'Accessory Update', icon: <FaBoxOpen />, path: '/accessory-update', category: 'Transactions' },
-    { name: 'Upload Stock', icon: <FaDatabase />, path: '/upload-stock', category: 'Bulk Operations' },
-    { name: 'Upload Averages', icon: <FaUpload />, path: '/upload-fabric-average', category: 'Bulk Operations' },
-    { name: 'Upload Fabric', icon: <FaUpload />, path: '/upload-fabric', category: 'Bulk Operations' },
-    { name: 'Upload Relations', icon: <FaUpload />, path: '/upload-mtr-kg', category: 'Bulk Operations' },
-    { name: 'Upload Accessory', icon: <FaUpload />, path: '/accessory-upload', category: 'Bulk Operations' },
+    {
+      name: 'Add/Ship Fabric',
+      icon: <FaShippingFast />,
+      path: '/add-ship',
+      category: 'Transactions',
+    },
+    {
+      name: 'Accessory Update',
+      icon: <FaBoxOpen />,
+      path: '/accessory-update',
+      category: 'Transactions',
+    },
+    {
+      name: 'Upload Stock',
+      icon: <FaDatabase />,
+      path: '/upload-stock',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Averages',
+      icon: <FaUpload />,
+      path: '/upload-fabric-average',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Fabric',
+      icon: <FaUpload />,
+      path: '/upload-fabric',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Relations',
+      icon: <FaUpload />,
+      path: '/upload-mtr-kg',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Accessory',
+      icon: <FaUpload />,
+      path: '/accessory-upload',
+      category: 'Bulk Operations',
+    },
     { name: 'Low Stock Alert', icon: <FaBell />, path: '/low-stock', category: 'Monitoring' },
+    {
+      name: 'Production_Report',
+      icon: <FaList />,
+      path: '/production_report',
+      category: 'Monitoring',
+    },
     // { name: 'Documentation', icon: <FaBook />, path: 'https://github.com/sachin-dev-at-qurvii/docs/blob/main/doc.md', category: 'Resources', external: true },
-    { name: 'Documentation', icon: <FaBook />, path: '/docs', category: 'Resources', external: true },
+    {
+      name: 'Documentation',
+      icon: <FaBook />,
+      path: '/docs',
+      category: 'Resources',
+      external: true,
+    },
   ];
 
   const superAdminLinks = [
     { name: 'Store1', icon: <FaWarehouse />, path: '/', category: 'Dashboard' },
     { name: 'Store2', icon: <FaWarehouse />, path: '/stock2', category: 'Dashboard' },
     { name: 'Accessory Stock', icon: <FaTags />, path: '/accessory-stock', category: 'Dashboard' },
-    { name: 'Latest Purchase', icon: <FaHistory />, path: '/latest-purchase', category: 'Dashboard' },
-    { name: 'Fabric Averages', icon: <FaCalculator />, path: '/fabric-average', category: 'Dashboard' },
-    { name: 'Style Management', icon: <FaLayerGroup />, path: '/style-number', category: 'Management' },
+    {
+      name: 'Latest Purchase',
+      icon: <FaHistory />,
+      path: '/latest-purchase',
+      category: 'Dashboard',
+    },
+    {
+      name: 'Fabric Averages',
+      icon: <FaCalculator />,
+      path: '/fabric-average',
+      category: 'Dashboard',
+    },
+    {
+      name: 'Style Management',
+      icon: <FaLayerGroup />,
+      path: '/style-number',
+      category: 'Management',
+    },
     { name: 'Fabric Relations', icon: <FaLink />, path: '/meter-and-kg', category: 'Relations' },
-    { name: 'Add/Ship Fabric', icon: <FaShippingFast />, path: '/add-ship', category: 'Transactions' },
-    { name: 'Accessory Update', icon: <FaBoxOpen />, path: '/accessory-update', category: 'Transactions' },
-    { name: 'Upload Stock', icon: <FaDatabase />, path: '/upload-stock', category: 'Bulk Operations' },
-    { name: 'Upload Averages', icon: <FaUpload />, path: '/upload-fabric-average', category: 'Bulk Operations' },
-    { name: 'Upload Fabric', icon: <FaUpload />, path: '/upload-fabric', category: 'Bulk Operations' },
-    { name: 'Upload Relations', icon: <FaUpload />, path: '/upload-mtr-kg', category: 'Bulk Operations' },
-    { name: 'Upload Accessory', icon: <FaUpload />, path: '/accessory-upload', category: 'Bulk Operations' },
+    {
+      name: 'Add/Ship Fabric',
+      icon: <FaShippingFast />,
+      path: '/add-ship',
+      category: 'Transactions',
+    },
+    {
+      name: 'Accessory Update',
+      icon: <FaBoxOpen />,
+      path: '/accessory-update',
+      category: 'Transactions',
+    },
+    {
+      name: 'Upload Stock',
+      icon: <FaDatabase />,
+      path: '/upload-stock',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Averages',
+      icon: <FaUpload />,
+      path: '/upload-fabric-average',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Fabric',
+      icon: <FaUpload />,
+      path: '/upload-fabric',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Relations',
+      icon: <FaUpload />,
+      path: '/upload-mtr-kg',
+      category: 'Bulk Operations',
+    },
+    {
+      name: 'Upload Accessory',
+      icon: <FaUpload />,
+      path: '/accessory-upload',
+      category: 'Bulk Operations',
+    },
     { name: 'Low Stock Alert', icon: <FaBell />, path: '/low-stock', category: 'Monitoring' },
+    {
+      name: 'Production_Report',
+      icon: <FaList />,
+      path: '/production_report',
+      category: 'Monitoring',
+    },
     // { name: 'Documentation', icon: <FaBook />, path: 'https://github.com/sachin-dev-at-qurvii/docs/blob/main/doc.md', category: 'Resources', external: true },
-    { name: 'Documentation', icon: <FaBook />, path: '/docs', category: 'Resources', external: true },
+    {
+      name: 'Documentation',
+      icon: <FaBook />,
+      path: '/docs',
+      category: 'Resources',
+      external: true,
+    },
   ];
 
   // Determine which links to show based on role
-  const roleBasedLinks = user?.role === "admin" ? adminLinks :
-    user?.role === "super-admin" ? superAdminLinks :
-      baseLinks;
+  const roleBasedLinks =
+    user?.role === 'admin'
+      ? adminLinks
+      : user?.role === 'super-admin'
+        ? superAdminLinks
+        : baseLinks;
 
   // Group links by category
   const groupedLinks = roleBasedLinks.reduce((acc, link) => {
@@ -124,16 +279,16 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
 
   // Toggle category expansion
   const toggleCategory = (category) => {
-    setExpandedCategories(prev => ({
+    setExpandedCategories((prev) => ({
       ...prev,
-      [category]: !prev[category]
+      [category]: !prev[category],
     }));
   };
 
   // Collapse all categories
   const collapseAll = () => {
     const collapsedState = {};
-    Object.keys(groupedLinks).forEach(category => {
+    Object.keys(groupedLinks).forEach((category) => {
       collapsedState[category] = false;
     });
     setExpandedCategories(collapsedState);
@@ -142,15 +297,15 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
   // Expand all categories
   const expandAll = () => {
     const expandedState = {};
-    Object.keys(groupedLinks).forEach(category => {
+    Object.keys(groupedLinks).forEach((category) => {
       expandedState[category] = true;
     });
     setExpandedCategories(expandedState);
   };
 
   useEffect(() => {
-    collapseAll()
-  }, [])
+    collapseAll();
+  }, []);
 
   return (
     <div className="w-64 h-screen fixed bg-gradient-to-b from-gray-950 to-gray-900 text-white shadow-2xl flex flex-col border-r border-gray-800 z-50">
@@ -162,7 +317,6 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
           </div>
           <div>
             <h2 className="text-xl font-bold text-white tracking-tight">FabricPro</h2>
-
           </div>
         </div>
 
@@ -178,11 +332,14 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
               </div>
               <div>
                 <p className="font-medium text-white truncate">{user?.username || 'User'}</p>
-                <p className="text-gray-400 text-xs truncate">{user?.emailid || 'user@example.com'}</p>
-                <p className="text-green-500 mt-1 font-bold text-xs truncate">{user?.role || 'User'}</p>
+                <p className="text-gray-400 text-xs truncate">
+                  {user?.emailid || 'user@example.com'}
+                </p>
+                <p className="text-green-500 mt-1 font-bold text-xs truncate">
+                  {user?.role || 'User'}
+                </p>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -227,8 +384,9 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
 
             {/* Category Links - Animated Collapse/Expand */}
             <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${expandedCategories[category] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                expandedCategories[category] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+              }`}
             >
               <div className="ml-8 space-y-1 py-2">
                 {categoryLinks.map((link) => {
@@ -255,16 +413,20 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
                       key={link.name}
                       to={link.path}
                       className={({ isActive }) =>
-                        `group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
-                          ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-l-4 border-blue-500 shadow-lg'
-                          : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                        `group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                          isActive
+                            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-white border-l-4 border-blue-500 shadow-lg'
+                            : 'text-gray-400 hover:bg-gray-800 hover:text-white'
                         }`
                       }
                     >
-                      <div className={`text-lg transition-colors ${location.pathname === link.path
-                        ? 'text-blue-400'
-                        : 'text-gray-500 group-hover:text-blue-400'
-                        }`}>
+                      <div
+                        className={`text-lg transition-colors ${
+                          location.pathname === link.path
+                            ? 'text-blue-400'
+                            : 'text-gray-500 group-hover:text-blue-400'
+                        }`}
+                      >
                         {link.icon}
                       </div>
                       <span className="font-medium flex-1 text-sm">{link.name}</span>
@@ -283,10 +445,7 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
         <p className="text-gray-600 text-xs text-center mt-4 pt-4 ">
           © {new Date().getFullYear()} FabricPro Inventory System
         </p>
-
       </div>
-
-
 
       {/* Custom Scrollbar */}
       <style jsx="false">{`
@@ -304,7 +463,7 @@ const Sidebar = ({ isAuthenticated, user, setUser }) => {
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(to bottom, #2563eb, #7c3aed);
         }
-        
+
         /* Smooth transitions */
         .transition-max-height {
           transition: max-height 0.3s ease-in-out;
